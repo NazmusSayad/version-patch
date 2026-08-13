@@ -8,10 +8,23 @@ export type VersionOptions = AffixOptions & {
 }
 
 export async function resolveVersion(input: string, options: VersionOptions) {
-  let version = stripAffixes(input, options)
+  let version = input
 
   if (options.transform !== undefined) {
+    if (
+      options.prefix !== undefined ||
+      options.suffix !== undefined ||
+      options.optionalPrefix !== undefined ||
+      options.optionalSuffix !== undefined
+    ) {
+      throw new Error(
+        'Use either --transform or --prefix/--suffix/--optional-prefix/--optional-suffix, not both'
+      )
+    }
+
     version = await applyTransform(version, options.transform)
+  } else {
+    version = stripAffixes(version, options)
   }
 
   validateFormat(version, options.format)
