@@ -1,0 +1,39 @@
+{
+  "name": "version-mod",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit",
+    "typecheck:watch": "tsc --noEmit --watch",
+    "build": "tsdown --config ./tsdown.config.ts",
+    "dev": "concurrently --names \"R,T\" --prefix-colors \"blue.dim,magenta.dim\" \"tsdown --config ./tsdown.config.ts --watch\" \"tsc --noEmit --watch\"",
+    "start": "tsx --watch ./src/index.ts"
+  },
+  "bin": {
+    "version-mod": "./dist/index.mjs"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1",
+    "@eslint/eslintrc": "^3",
+    "@eslint/js": "^9",
+    "@types/node": "^25",
+    "@typescript-eslint/eslint-plugin": "^8",
+    "@typescript-eslint/parser": "^8",
+    "concurrently": "^10",
+    "eslint": "^9",
+    "eslint-config-prettier": "^10",
+    "eslint-plugin-check-file": "^3",
+    "eslint-plugin-import": "^2",
+    "eslint-plugin-prettier": "^5",
+    "husky": "^9",
+    "prettier": "^3",
+    "prettier-plugin-organize-imports": "^4",
+    "tsdown": "^0",
+    "tslib": "^2",
+    "tsx": "^4",
+    "typescript": "^5",
+    "typescript-eslint": "^8"
+  }
+}
