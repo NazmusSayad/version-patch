@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "prepare": "husky",
     "test": "vitest run",
     "test:watch": "vitest watch",
     "lint": "eslint .",
