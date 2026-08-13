@@ -60,6 +60,5 @@
     "bump",
     "cli",
     "monorepo"
-  ],
-  "packageManager": "pnpm@11.21.0"
+  ]
 }
