@@ -7,14 +7,10 @@ settings:
 importers:
 
   .:
-    dependencies:
+    devDependencies:
       '@commander-js/extra-typings':
         specifier: ^15.0.0
         version: 15.0.0(commander@15.0.0)
-      commander:
-        specifier: ^15.0.0
-        version: 15.0.0
-    devDependencies:
       '@eslint/compat':
         specifier: ^1
         version: 1.4.1(eslint@9.39.5(supports-color@10.2.2))
@@ -33,6 +29,9 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^8
         version: 8.67.0(eslint@9.39.5(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3)
+      commander:
+        specifier: ^15.0.0
+        version: 15.0.0
       concurrently:
         specifier: ^10
         version: 10.0.4
