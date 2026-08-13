@@ -1,11 +1,12 @@
-import { withVersionOptions } from '@/core/options.js'
+import { withCommonOptions } from '@/core/options.js'
 import { resolveVersion } from '@/core/version.js'
+import { pushChanges } from '@/lib/git.js'
 import { setJsonVersion } from '@/lib/json.js'
 import { Command } from '@commander-js/extra-typings'
 import { readFile, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
-export const nodeCommand = withVersionOptions(
+export const nodeCommand = withCommonOptions(
   new Command('node')
     .description('patch the version of a node package')
     .argument('<version>', 'version to write')
@@ -17,4 +18,6 @@ export const nodeCommand = withVersionOptions(
 
   await writeFile(pkgFile, pkg.text)
   console.log(`${pkgFile}: ${pkg.current} -> ${version}`)
+
+  await pushChanges([pkgFile], version, options)
 })

@@ -5,7 +5,7 @@ import {
   type OptionValues,
 } from '@commander-js/extra-typings'
 
-export function withVersionOptions<
+export function withCommonOptions<
   Args extends unknown[],
   Opts extends OptionValues,
 >(command: Command<Args, Opts>) {
@@ -29,4 +29,25 @@ export function withVersionOptions<
       '--transform <path>',
       'module default exporting (version: string) => string'
     )
+    .option('--push', 'commit the patched files and push them')
+    .option('--git-name <name>', 'user.name used for the commit')
+    .option('--git-email <email>', 'user.email used for the commit')
+    .option(
+      '--git-msg <message>',
+      'commit message, {VERSION} is replaced with the new version',
+      'chore(release): {VERSION}'
+    )
+    .hook('preAction', (command) => {
+      const push = command.getOptionValue('push')
+      const gitName = command.getOptionValue('gitName')
+      const gitEmail = command.getOptionValue('gitEmail')
+      const gitMsg = command.getOptionValueSource('gitMsg')
+
+      if (
+        push === undefined &&
+        (gitName !== undefined || gitEmail !== undefined || gitMsg === 'cli')
+      ) {
+        throw new Error('--git-name, --git-email and --git-msg require --push')
+      }
+    })
 }

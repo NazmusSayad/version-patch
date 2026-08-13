@@ -1,12 +1,13 @@
-import { withVersionOptions } from '@/core/options.js'
+import { withCommonOptions } from '@/core/options.js'
 import { resolveVersion } from '@/core/version.js'
+import { pushChanges } from '@/lib/git.js'
 import { setJsonVersion } from '@/lib/json.js'
 import { setLockPackageVersion, setPackageVersion } from '@/lib/toml.js'
 import { Command } from '@commander-js/extra-typings'
 import { readFile, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
-export const tauriCommand = withVersionOptions(
+export const tauriCommand = withCommonOptions(
   new Command('tauri')
     .description('patch the version of a tauri app')
     .argument('<version>', 'version to write')
@@ -72,23 +73,31 @@ export const tauriCommand = withVersionOptions(
     }
   }
 
+  const patched: string[] = []
+
   if (pkg !== undefined) {
     await writeFile(pkgFile, pkg.text)
     console.log(`${pkgFile}: ${pkg.current} -> ${version}`)
+    patched.push(pkgFile)
   }
 
   if (conf !== undefined) {
     await writeFile(confFile, conf.text)
     console.log(`${confFile}: ${conf.current} -> ${version}`)
+    patched.push(confFile)
   }
 
   if (manifest !== undefined && !options.skipManifest) {
     await writeFile(manifestFile, manifest.text)
     console.log(`${manifestFile}: ${manifest.current} -> ${version}`)
+    patched.push(manifestFile)
   }
 
   if (lock !== undefined) {
     await writeFile(lockFile, lock.text)
     console.log(`${lockFile}: ${lock.current} -> ${version}`)
+    patched.push(lockFile)
   }
+
+  await pushChanges(patched, version, options)
 })
