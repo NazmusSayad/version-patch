@@ -43,5 +43,14 @@
     "typescript": "^5",
     "typescript-eslint": "^8",
     "vitest": "^4.1.10"
+  },
+  "description": "Patch the version of node, cargo and tauri projects from a single command.",
+  "homepage": "https://github.com/NazmusSayad/version-patch#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NazmusSayad/version-patch.git"
+  },
+  "bugs": {
+    "url": "https://github.com/NazmusSayad/version-patch/issues"
   }
 }
