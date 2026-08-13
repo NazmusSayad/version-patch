@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { nodeCommand } from '@/cmd/node'
+import { nodeCommand } from '@/cmd/node.js'
 import { Command } from '@commander-js/extra-typings'
 import { readFileSync } from 'node:fs'
 

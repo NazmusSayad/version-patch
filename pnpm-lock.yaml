@@ -21,7 +21,7 @@ importers:
         specifier: ^9
         version: 9.39.5
       '@types/node':
-        specifier: ^25
+        specifier: ^25.9.5
         version: 25.9.5
       '@typescript-eslint/eslint-plugin':
         specifier: ^8
