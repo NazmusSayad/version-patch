@@ -23,10 +23,8 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - run: corepack enable
-
-      - run: pnpm install --frozen-lockfile
-
       - run: npm install -g version-patch
+      - run: pnpm install --frozen-lockfile
 
       - name: Set the version
         run: >
@@ -38,7 +36,5 @@ jobs:
           --git-email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - run: pnpm build
-
       - run: npm publish
-
       - run: git push
