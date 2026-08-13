@@ -26,7 +26,20 @@ export const tauriCommand = withVersionOptions(
       'path to Cargo.lock',
       './src-tauri/Cargo.lock'
     )
+    .option('--skip-pkg', 'do not patch package.json')
+    .option('--skip-conf', 'do not patch tauri.conf.json')
+    .option('--skip-manifest', 'do not patch Cargo.toml')
+    .option('--skip-lock', 'do not patch Cargo.lock')
 ).action(async (input, options) => {
+  if (
+    options.skipPkg &&
+    options.skipConf &&
+    options.skipManifest &&
+    options.skipLock
+  ) {
+    throw new Error('Nothing to patch, every file is skipped')
+  }
+
   const version = await resolveVersion(input, options)
 
   const pkgFile = resolve(options.pkgFile)
@@ -34,25 +47,48 @@ export const tauriCommand = withVersionOptions(
   const manifestFile = resolve(options.manifestFile)
   const lockFile = resolve(options.lockFile)
 
-  const pkg = setJsonVersion(await readFile(pkgFile, 'utf8'), version)
-  const conf = setJsonVersion(await readFile(confFile, 'utf8'), version)
-  const manifest = setPackageVersion(
-    await readFile(manifestFile, 'utf8'),
-    version
-  )
-  const lock = setLockPackageVersion(
-    await readFile(lockFile, 'utf8'),
-    manifest.name,
-    version
-  )
+  let pkg: ReturnType<typeof setJsonVersion> | undefined
+  let conf: ReturnType<typeof setJsonVersion> | undefined
+  let manifest: ReturnType<typeof setPackageVersion> | undefined
+  let lock: ReturnType<typeof setLockPackageVersion> | undefined
 
-  await writeFile(pkgFile, pkg.text)
-  await writeFile(confFile, conf.text)
-  await writeFile(manifestFile, manifest.text)
-  await writeFile(lockFile, lock.text)
+  if (!options.skipPkg) {
+    pkg = setJsonVersion(await readFile(pkgFile, 'utf8'), version)
+  }
 
-  console.log(`${pkgFile}: ${pkg.current} -> ${version}`)
-  console.log(`${confFile}: ${conf.current} -> ${version}`)
-  console.log(`${manifestFile}: ${manifest.current} -> ${version}`)
-  console.log(`${lockFile}: ${lock.current} -> ${version}`)
+  if (!options.skipConf) {
+    conf = setJsonVersion(await readFile(confFile, 'utf8'), version)
+  }
+
+  if (!options.skipManifest || !options.skipLock) {
+    manifest = setPackageVersion(await readFile(manifestFile, 'utf8'), version)
+
+    if (!options.skipLock) {
+      lock = setLockPackageVersion(
+        await readFile(lockFile, 'utf8'),
+        manifest.name,
+        version
+      )
+    }
+  }
+
+  if (pkg !== undefined) {
+    await writeFile(pkgFile, pkg.text)
+    console.log(`${pkgFile}: ${pkg.current} -> ${version}`)
+  }
+
+  if (conf !== undefined) {
+    await writeFile(confFile, conf.text)
+    console.log(`${confFile}: ${conf.current} -> ${version}`)
+  }
+
+  if (manifest !== undefined && !options.skipManifest) {
+    await writeFile(manifestFile, manifest.text)
+    console.log(`${manifestFile}: ${manifest.current} -> ${version}`)
+  }
+
+  if (lock !== undefined) {
+    await writeFile(lockFile, lock.text)
+    console.log(`${lockFile}: ${lock.current} -> ${version}`)
+  }
 })
