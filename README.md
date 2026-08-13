@@ -1,43 +1,25 @@
 # version-patch
 
-One CLI to patch the version of any project. Every platform gets its own
-command, and they all share the same version pipeline and git options.
+Set the version of a project from the command line, without reformatting the
+files.
 
 ```bash
 npx version-patch node 1.2.3
+npx version-patch cargo 1.2.3      # Cargo.toml, Cargo.lock
+npx version-patch tauri 1.2.3      # package.json, tauri.conf.json, Cargo.toml, Cargo.lock
 ```
 
-## Platforms
-
-| Command | Patches                                                       |
-| ------- | ------------------------------------------------------------- |
-| `node`  | `package.json`                                                |
-| `cargo` | `Cargo.toml`, `Cargo.lock`                                    |
-| `tauri` | `package.json`, `tauri.conf.json`, `Cargo.toml`, `Cargo.lock` |
-
-More platforms are on the way. Files are edited in place, so formatting and
-comments stay exactly as they were.
-
-## Version pipeline
-
-```
-input -> remove prefix/suffix (or transform) -> validate format
-```
+## Version
 
 ```bash
 npx version-patch node v1.2.3-rc --prefix v --suffix -rc
 ```
 
-| Option                       | Description                                            |
-| ---------------------------- | ------------------------------------------------------ |
-| `--format <format>`          | `semver` (default), `calver` or `number`               |
-| `--prefix <prefix>`          | must be present, removed from the input                |
-| `--suffix <suffix>`          | must be present, removed from the input                |
-| `--optional-prefix <prefix>` | removed only when present                              |
-| `--optional-suffix <suffix>` | removed only when present                              |
-| `--transform <path>`         | module default exporting `(version: string) => string` |
-
-`--transform` replaces the prefix/suffix options, they cannot be used together.
+- `--format <format>` `semver` (default), `calver` or `number`
+- `--prefix <prefix>` `--suffix <suffix>` removed, must be present
+- `--optional-prefix <prefix>` `--optional-suffix <suffix>` removed if present
+- `--transform <path>` module default exporting `(version: string) => string`,
+  cannot be mixed with the prefix/suffix options
 
 ## Git
 
@@ -45,32 +27,15 @@ npx version-patch node v1.2.3-rc --prefix v --suffix -rc
 npx version-patch node 1.2.3 --git-push --git-msg "release v{VERSION}"
 ```
 
-| Option               | Description                                                            |
-| -------------------- | ---------------------------------------------------------------------- |
-| `--git-stage`        | stage the patched files                                                |
-| `--git-commit`       | stage and commit them                                                  |
-| `--git-push`         | stage, commit and push them                                            |
-| `--git-name <name>`  | `user.name` for the commit                                             |
-| `--git-email <mail>` | `user.email` for the commit                                            |
-| `--git-msg <msg>`    | message, `{VERSION}` is replaced (default `chore(release): {VERSION}`) |
-
-Only one of `--git-stage`, `--git-commit` and `--git-push` can be used at a
-time, and only the patched files are touched. Use `--git-commit` when you want
-to push yourself later, for example after publishing.
-
-```bash
-npx version-patch node 1.2.3 --git-commit
-npm publish
-git push
-```
+- `--git-stage` `--git-commit` `--git-push` pick one, only the patched files
+- `--git-name <name>` `--git-email <mail>` used for the commit
+- `--git-msg <msg>` default `chore(release): {VERSION}`
 
 ## Files
-
-Each command can point to its own files and skip the ones you do not want.
 
 ```bash
 npx version-patch cargo 1.2.3 --manifest-file ./crates/app/Cargo.toml --skip-lock
 npx version-patch tauri 1.2.3 --skip-pkg --skip-lock
 ```
 
-Run `npx version-patch <platform> --help` for the full list.
+Run `npx version-patch <platform> --help` for the rest.
