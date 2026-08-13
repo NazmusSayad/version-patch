@@ -1,5 +1,5 @@
 {
-  "name": "version-mod",
+  "name": "version-patch",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -12,7 +12,7 @@
     "start": "tsx --watch ./src/index.ts"
   },
   "bin": {
-    "version-mod": "./dist/index.mjs"
+    "version-patch": "./dist/index.mjs"
   },
   "devDependencies": {
     "@eslint/compat": "^1",
@@ -28,6 +28,7 @@
     "eslint-plugin-import": "^2",
     "eslint-plugin-prettier": "^5",
     "husky": "^9",
+    "jsonc-patch": "^0.0.4",
     "prettier": "^3",
     "prettier-plugin-organize-imports": "^4",
     "tsdown": "^0",
