@@ -29,7 +29,7 @@ export function withCommonOptions<
       '--transform <path>',
       'module default exporting (version: string) => string'
     )
-    .option('--push', 'commit the patched files and push them')
+    .option('--git-push', 'commit the patched files and push them')
     .option('--git-name <name>', 'user.name used for the commit')
     .option('--git-email <email>', 'user.email used for the commit')
     .option(
@@ -38,16 +38,18 @@ export function withCommonOptions<
       'chore(release): {VERSION}'
     )
     .hook('preAction', (command) => {
-      const push = command.getOptionValue('push')
+      const gitPush = command.getOptionValue('gitPush')
       const gitName = command.getOptionValue('gitName')
       const gitEmail = command.getOptionValue('gitEmail')
       const gitMsg = command.getOptionValueSource('gitMsg')
 
       if (
-        push === undefined &&
+        gitPush === undefined &&
         (gitName !== undefined || gitEmail !== undefined || gitMsg === 'cli')
       ) {
-        throw new Error('--git-name, --git-email and --git-msg require --push')
+        throw new Error(
+          '--git-name, --git-email and --git-msg require --git-push'
+        )
       }
     })
 }

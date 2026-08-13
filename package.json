@@ -45,7 +45,7 @@
     "typescript-eslint": "^8",
     "vitest": "^4.1.10"
   },
-  "description": "Patch the version of node, cargo and tauri projects from a single command.",
+  "description": "A single CLI to patch the version of any project — node, cargo, tauri and more.",
   "homepage": "https://github.com/NazmusSayad/version-patch#readme",
   "repository": {
     "type": "git",
@@ -53,5 +53,13 @@
   },
   "bugs": {
     "url": "https://github.com/NazmusSayad/version-patch/issues"
-  }
+  },
+  "keywords": [
+    "version",
+    "release",
+    "bump",
+    "cli",
+    "monorepo"
+  ],
+  "packageManager": "pnpm@11.21.0"
 }

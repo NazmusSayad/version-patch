@@ -37,20 +37,9 @@ afterEach(async () => {
 })
 
 describe('pushChanges', () => {
-  it('does nothing without --push', async () => {
-    await writeFile(join(work, 'package.json'), '{ "version": "1.0.0" }\n')
-    await pushChanges([join(work, 'package.json')], '1.0.0', {
-      gitMsg: 'chore(release): {VERSION}',
-    })
-
-    const status = await simpleGit(work).status()
-    expect(status.modified).toEqual(['package.json'])
-  })
-
   it('commits and pushes the given files', async () => {
     await writeFile(join(work, 'package.json'), '{ "version": "1.0.0" }\n')
     await pushChanges([join(work, 'package.json')], '1.0.0', {
-      push: true,
       gitMsg: 'chore(release): {VERSION}',
     })
 
@@ -65,7 +54,6 @@ describe('pushChanges', () => {
     await writeFile(join(work, 'package.json'), '{ "version": "1.0.0" }\n')
     await writeFile(join(work, 'other.txt'), 'changed\n')
     await pushChanges([join(work, 'package.json')], '1.0.0', {
-      push: true,
       gitMsg: 'chore(release): {VERSION}',
     })
 
@@ -76,7 +64,6 @@ describe('pushChanges', () => {
   it('replaces every {VERSION} placeholder', async () => {
     await writeFile(join(work, 'package.json'), '{ "version": "2.0.0" }\n')
     await pushChanges([join(work, 'package.json')], '2.0.0', {
-      push: true,
       gitMsg: 'v{VERSION}: bump to {VERSION}',
     })
 
@@ -87,7 +74,6 @@ describe('pushChanges', () => {
   it('keeps a message without a placeholder as is', async () => {
     await writeFile(join(work, 'package.json'), '{ "version": "2.0.0" }\n')
     await pushChanges([join(work, 'package.json')], '2.0.0', {
-      push: true,
       gitMsg: 'chore: bump',
     })
 
@@ -98,7 +84,6 @@ describe('pushChanges', () => {
   it('uses the given name and email without changing the repo config', async () => {
     await writeFile(join(work, 'package.json'), '{ "version": "3.0.0" }\n')
     await pushChanges([join(work, 'package.json')], '3.0.0', {
-      push: true,
       gitName: 'CI Bot',
       gitEmail: 'ci@example.com',
       gitMsg: 'chore(release): {VERSION}',

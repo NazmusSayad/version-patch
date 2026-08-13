@@ -1,7 +1,6 @@
 import { simpleGit } from 'simple-git'
 
 export type GitOptions = {
-  push?: true
   gitName?: string
   gitEmail?: string
   gitMsg: string
@@ -12,8 +11,6 @@ export async function pushChanges(
   version: string,
   options: GitOptions
 ) {
-  if (options.push === undefined) return
-
   const config: string[] = []
 
   if (options.gitName !== undefined) {

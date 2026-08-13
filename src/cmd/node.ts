@@ -19,5 +19,7 @@ export const nodeCommand = withCommonOptions(
   await writeFile(pkgFile, pkg.text)
   console.log(`${pkgFile}: ${pkg.current} -> ${version}`)
 
-  await pushChanges([pkgFile], version, options)
+  if (options.gitPush !== undefined) {
+    await pushChanges([pkgFile], version, options)
+  }
 })

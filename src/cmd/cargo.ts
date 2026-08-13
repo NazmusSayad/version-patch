@@ -43,5 +43,7 @@ export const cargoCommand = withCommonOptions(
     patched.push(lockFile)
   }
 
-  await pushChanges(patched, version, options)
+  if (options.gitPush !== undefined) {
+    await pushChanges(patched, version, options)
+  }
 })
