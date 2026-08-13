@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import { cargoCommand } from '@/cmd/cargo.js'
-import { gitPushCommand } from '@/cmd/git-push.js'
 import { nodeCommand } from '@/cmd/node.js'
 import { tauriCommand } from '@/cmd/tauri.js'
 import { Command } from '@commander-js/extra-typings'
@@ -18,7 +17,6 @@ new Command()
   .addCommand(nodeCommand)
   .addCommand(cargoCommand)
   .addCommand(tauriCommand)
-  .addCommand(gitPushCommand)
   .parseAsync()
   .catch((error) => {
     console.error(error instanceof Error ? error.message : error)

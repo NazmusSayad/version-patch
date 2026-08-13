@@ -29,15 +29,16 @@ jobs:
       - run: npm install -g version-patch
 
       - name: Set the version
-        run: version-patch node "${{ github.event.release.tag_name }}" --prefix v
+        run: >
+          version-patch node "${{ github.event.release.tag_name }}"
+          --prefix v
+          --git-commit
+          --git-msg "chore(release): v{VERSION}"
+          --git-name "github-actions[bot]"
+          --git-email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - run: pnpm build
 
       - run: npm publish
 
-      - name: Push the version
-        run: >
-          version-patch git-push package.json
-          --msg "chore(release): ${{ github.event.release.tag_name }}"
-          --name "github-actions[bot]"
-          --email "41898282+github-actions[bot]@users.noreply.github.com"
+      - run: git push

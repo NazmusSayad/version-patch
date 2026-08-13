@@ -15,9 +15,6 @@ npx version-patch node 1.2.3
 | `cargo` | `Cargo.toml`, `Cargo.lock`                                    |
 | `tauri` | `package.json`, `tauri.conf.json`, `Cargo.toml`, `Cargo.lock` |
 
-There is also a standalone `git-push` command that just commits and pushes the
-files you give it.
-
 More platforms are on the way. Files are edited in place, so formatting and
 comments stay exactly as they were.
 
@@ -50,18 +47,21 @@ npx version-patch node 1.2.3 --git-push --git-msg "release v{VERSION}"
 
 | Option               | Description                                                            |
 | -------------------- | ---------------------------------------------------------------------- |
-| `--git-push`         | add, commit and push the patched files only                            |
+| `--git-stage`        | stage the patched files                                                |
+| `--git-commit`       | stage and commit them                                                  |
+| `--git-push`         | stage, commit and push them                                            |
 | `--git-name <name>`  | `user.name` for the commit                                             |
 | `--git-email <mail>` | `user.email` for the commit                                            |
 | `--git-msg <msg>`    | message, `{VERSION}` is replaced (default `chore(release): {VERSION}`) |
 
-To push later, for example after publishing, use the standalone `git-push`
-command. It just commits the given files with `--msg`, `--name` and `--email`.
+Only one of `--git-stage`, `--git-commit` and `--git-push` can be used at a
+time, and only the patched files are touched. Use `--git-commit` when you want
+to push yourself later, for example after publishing.
 
 ```bash
-npx version-patch node 1.2.3
+npx version-patch node 1.2.3 --git-commit
 npm publish
-npx version-patch git-push package.json --msg "release v1.2.3"
+git push
 ```
 
 ## Files

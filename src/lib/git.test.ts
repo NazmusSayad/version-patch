@@ -1,4 +1,4 @@
-import { pushChanges } from '@/lib/git.js'
+import { runGitActions } from '@/lib/git.js'
 import { mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -36,10 +36,52 @@ afterEach(async () => {
   await rm(dir, { recursive: true, force: true })
 })
 
-describe('pushChanges', () => {
+describe('runGitActions', () => {
+  it('only stages the given files with gitStage', async () => {
+    await writeFile(join(work, 'package.json'), '{ "version": "1.0.0" }\n')
+    await writeFile(join(work, 'other.txt'), 'changed\n')
+    await runGitActions([join(work, 'package.json')], '1.0.0', {
+      gitStage: true,
+      gitMsg: 'chore(release): {VERSION}',
+    })
+
+    const status = await simpleGit(work).status()
+    expect(status.staged).toEqual(['package.json'])
+    expect(status.modified).toEqual(['other.txt', 'package.json'])
+
+    const log = await simpleGit(work).log()
+    expect(log.latest?.message).toBe('init')
+  })
+
+  it('commits without pushing with gitCommit', async () => {
+    await writeFile(join(work, 'package.json'), '{ "version": "1.0.0" }\n')
+    await runGitActions([join(work, 'package.json')], '1.0.0', {
+      gitCommit: true,
+      gitMsg: 'chore(release): {VERSION}',
+    })
+
+    const log = await simpleGit(work).log()
+    expect(log.latest?.message).toBe('chore(release): 1.0.0')
+
+    const remote = await simpleGit(join(dir, 'origin.git')).log()
+    expect(remote.latest?.message).toBe('init')
+  })
+
+  it('does nothing when no action is requested', async () => {
+    await writeFile(join(work, 'package.json'), '{ "version": "1.0.0" }\n')
+    await runGitActions([join(work, 'package.json')], '1.0.0', {
+      gitMsg: 'chore(release): {VERSION}',
+    })
+
+    const status = await simpleGit(work).status()
+    expect(status.staged).toEqual([])
+    expect(status.modified).toEqual(['package.json'])
+  })
+
   it('commits and pushes the given files', async () => {
     await writeFile(join(work, 'package.json'), '{ "version": "1.0.0" }\n')
-    await pushChanges([join(work, 'package.json')], '1.0.0', {
+    await runGitActions([join(work, 'package.json')], '1.0.0', {
+      gitPush: true,
       gitMsg: 'chore(release): {VERSION}',
     })
 
@@ -53,7 +95,8 @@ describe('pushChanges', () => {
   it('commits only the given files', async () => {
     await writeFile(join(work, 'package.json'), '{ "version": "1.0.0" }\n')
     await writeFile(join(work, 'other.txt'), 'changed\n')
-    await pushChanges([join(work, 'package.json')], '1.0.0', {
+    await runGitActions([join(work, 'package.json')], '1.0.0', {
+      gitPush: true,
       gitMsg: 'chore(release): {VERSION}',
     })
 
@@ -63,7 +106,8 @@ describe('pushChanges', () => {
 
   it('replaces every {VERSION} placeholder', async () => {
     await writeFile(join(work, 'package.json'), '{ "version": "2.0.0" }\n')
-    await pushChanges([join(work, 'package.json')], '2.0.0', {
+    await runGitActions([join(work, 'package.json')], '2.0.0', {
+      gitPush: true,
       gitMsg: 'v{VERSION}: bump to {VERSION}',
     })
 
@@ -73,7 +117,8 @@ describe('pushChanges', () => {
 
   it('keeps a message without a placeholder as is', async () => {
     await writeFile(join(work, 'package.json'), '{ "version": "2.0.0" }\n')
-    await pushChanges([join(work, 'package.json')], '2.0.0', {
+    await runGitActions([join(work, 'package.json')], '2.0.0', {
+      gitPush: true,
       gitMsg: 'chore: bump',
     })
 
@@ -83,7 +128,8 @@ describe('pushChanges', () => {
 
   it('uses the given name and email without changing the repo config', async () => {
     await writeFile(join(work, 'package.json'), '{ "version": "3.0.0" }\n')
-    await pushChanges([join(work, 'package.json')], '3.0.0', {
+    await runGitActions([join(work, 'package.json')], '3.0.0', {
+      gitPush: true,
       gitName: 'CI Bot',
       gitEmail: 'ci@example.com',
       gitMsg: 'chore(release): {VERSION}',

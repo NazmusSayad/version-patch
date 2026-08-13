@@ -1,6 +1,6 @@
 import { withCommonOptions } from '@/core/options.js'
 import { resolveVersion } from '@/core/version.js'
-import { pushChanges } from '@/lib/git.js'
+import { runGitActions } from '@/lib/git.js'
 import { setJsonVersion } from '@/lib/json.js'
 import { setLockPackageVersion, setPackageVersion } from '@/lib/toml.js'
 import { Command } from '@commander-js/extra-typings'
@@ -99,7 +99,5 @@ export const tauriCommand = withCommonOptions(
     patched.push(lockFile)
   }
 
-  if (options.gitPush !== undefined) {
-    await pushChanges(patched, version, options)
-  }
+  await runGitActions(patched, version, options)
 })

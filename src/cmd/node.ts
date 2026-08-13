@@ -1,6 +1,6 @@
 import { withCommonOptions } from '@/core/options.js'
 import { resolveVersion } from '@/core/version.js'
-import { pushChanges } from '@/lib/git.js'
+import { runGitActions } from '@/lib/git.js'
 import { setJsonVersion } from '@/lib/json.js'
 import { Command } from '@commander-js/extra-typings'
 import { readFile, writeFile } from 'node:fs/promises'
@@ -19,7 +19,5 @@ export const nodeCommand = withCommonOptions(
   await writeFile(pkgFile, pkg.text)
   console.log(`${pkgFile}: ${pkg.current} -> ${version}`)
 
-  if (options.gitPush !== undefined) {
-    await pushChanges([pkgFile], version, options)
-  }
+  await runGitActions([pkgFile], version, options)
 })

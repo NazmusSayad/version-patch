@@ -29,7 +29,9 @@ export function withCommonOptions<
       '--transform <path>',
       'module default exporting (version: string) => string'
     )
-    .option('--git-push', 'commit the patched files and push them')
+    .option('--git-stage', 'stage the patched files')
+    .option('--git-commit', 'stage and commit the patched files')
+    .option('--git-push', 'stage, commit and push the patched files')
     .option('--git-name <name>', 'user.name used for the commit')
     .option('--git-email <email>', 'user.email used for the commit')
     .option(
@@ -38,17 +40,29 @@ export function withCommonOptions<
       'chore(release): {VERSION}'
     )
     .hook('preAction', (command) => {
+      const gitStage = command.getOptionValue('gitStage')
+      const gitCommit = command.getOptionValue('gitCommit')
       const gitPush = command.getOptionValue('gitPush')
       const gitName = command.getOptionValue('gitName')
       const gitEmail = command.getOptionValue('gitEmail')
       const gitMsg = command.getOptionValueSource('gitMsg')
 
       if (
+        [gitStage, gitCommit, gitPush].filter((value) => value !== undefined)
+          .length > 1
+      ) {
+        throw new Error(
+          'Use only one of --git-stage, --git-commit or --git-push'
+        )
+      }
+
+      if (
+        gitCommit === undefined &&
         gitPush === undefined &&
         (gitName !== undefined || gitEmail !== undefined || gitMsg === 'cli')
       ) {
         throw new Error(
-          '--git-name, --git-email and --git-msg require --git-push'
+          '--git-name, --git-email and --git-msg require --git-commit or --git-push'
         )
       }
     })
