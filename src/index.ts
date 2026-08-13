@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { cargoCommand } from '@/cmd/cargo.js'
 import { nodeCommand } from '@/cmd/node.js'
 import { Command } from '@commander-js/extra-typings'
 import { readFileSync } from 'node:fs'
@@ -13,8 +14,9 @@ new Command()
   .description(packageJSON.description ?? '')
   .version(packageJSON.version, '-v, --version')
   .addCommand(nodeCommand)
+  .addCommand(cargoCommand)
   .parseAsync()
   .catch((error) => {
-    console.error(error)
+    console.error(error instanceof Error ? error.message : error)
     process.exit(1)
   })
