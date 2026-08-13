@@ -4,11 +4,12 @@ import packageJSON from './package.json' with { type: 'json' }
 export default defineConfig({
   entry: './src/index.ts',
 
+  clean: true,
   outDir: './dist',
   tsconfig: './tsconfig.json',
 
-  dts: true,
-  sourcemap: true,
+  dts: false,
+  sourcemap: false,
 
   format: 'es',
   target: 'ES6',

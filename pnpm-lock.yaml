@@ -7,6 +7,13 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@commander-js/extra-typings':
+        specifier: ^15.0.0
+        version: 15.0.0(commander@15.0.0)
+      commander:
+        specifier: ^15.0.0
+        version: 15.0.0
     devDependencies:
       '@eslint/compat':
         specifier: ^1
@@ -73,6 +80,11 @@ importers:
         version: 8.67.0(eslint@9.39.5(supports-color@10.2.2))(supports-color@10.2.2)(typescript@5.9.3)
 
 packages:
+
+  '@commander-js/extra-typings@15.0.0':
+    resolution: {integrity: sha512-yeJlba62xqmkgELUsn7356MEnzLLu/fw2x4lofFqGnXh6YysRdEs2BaLeLtg1+KU0AXvMeqQvTTp+3hBEBK+EA==}
+    peerDependencies:
+      commander: ~15.0.0
 
   '@esbuild/aix-ppc64@0.28.2':
     resolution: {integrity: sha512-XExcO+dvLKvVtNTibSTBej1NCAbaGhWn9Ww1ZPx80qsahhPFe/8jgWP0IchNe0F3HwkU7n8ejhH8bjonqht8mQ==}
@@ -729,6 +741,10 @@ packages:
 
   color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
+
+  commander@15.0.0:
+    resolution: {integrity: sha512-z67u4ZhzCL/Tydu1lJARtEZYWbWaN7oYLHbsuzocr6y4N6WZAagG3RQ4FW61V1/0+jImpj293XfrcYnd1qxtPg==}
+    engines: {node: '>=22.12.0'}
 
   concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
@@ -1733,6 +1749,10 @@ packages:
 
 snapshots:
 
+  '@commander-js/extra-typings@15.0.0(commander@15.0.0)':
+    dependencies:
+      commander: 15.0.0
+
   '@esbuild/aix-ppc64@0.28.2':
     optional: true
 
@@ -2245,6 +2265,8 @@ snapshots:
       color-name: 1.1.4
 
   color-name@1.1.4: {}
+
+  commander@15.0.0: {}
 
   concat-map@0.0.1: {}
 
