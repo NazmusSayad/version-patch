@@ -40,7 +40,8 @@ npx version-patch tauri 1.2.3 --skip-pkg --skip-lock
 
 Run `npx version-patch <platform> --help` for the rest.
 
-## Release workflow example
+# Agents
 
-See [our publish workflow](.github/workflows/publish.yml) as an example of a
-release pipeline using `version-patch`.
+If the user wants to use this project as a reference, inspect
+[our publish workflow](.github/workflows/publish.yml). Use it as an example, but
+follow the user's actual build and release pipeline.
